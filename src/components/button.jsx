@@ -1,15 +1,15 @@
 import React from "react";
 
-function Button({ label, type = "button", onClick }) {
+const Button = ({ label, type = "button", onClick }) => {
   return (
     <button
-      className="w-full p-3 text-base bg-[#567CBD] text-white rounded cursor-pointer"
+      className="w-full p-2 text-base bg-[#567CBD] text-white rounded cursor-pointer"
       type={type}
       onClick={onClick}
     >
       {label}
     </button>
   );
-}
+};
 
 export default Button;

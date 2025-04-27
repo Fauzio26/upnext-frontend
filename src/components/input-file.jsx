@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function FileInput({title}) {
+const FileInput = ({title}) => {
   const [fileName, setFileName] = useState('');
 
   const handleFile = (e) => {
@@ -16,11 +16,11 @@ function FileInput({title}) {
             type="text" 
             value={fileName} 
             readOnly placeholder="File yang dipilih" 
-            className="flex-1 p-3 text-base border-t-2 border-b-2 border-l-2 border-[#b0bcca] border-r-0 rounded-l-md outline-none"
+            className="flex-1 p-2 text-base border-t-2 border-b-2 border-l-2 border-[#b0bcca] border-r-0 rounded-l-md outline-none"
             />
             <label 
             htmlFor="file-upload" 
-            className="bg-[#567CBD] text-white p-3 flex items-center justify-center rounded-r-md cursor-pointer">Pilih File
+            className="bg-[#567CBD] text-white p-2 flex items-center justify-center rounded-r-md cursor-pointer">Pilih File
             </label>
             <input 
             id="file-upload" 

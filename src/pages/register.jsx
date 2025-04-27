@@ -6,7 +6,7 @@ import ImgContent from '../assets/image-content.svg'
 import FileInput from '../components/input-file'
 import { Link } from "react-router-dom";
 
-function Register() {
+const Register = () => {
     return(
         <div className='flex h-screen'>
         <div className='flex-1 flex flex-col gap-6 justify-center items-center bg-[#567CBD]'>
@@ -18,7 +18,7 @@ function Register() {
           <div className='flex flex-col items-center w-3/5 gap-4 p-6'>
             <div className="flex flex-col items-center gap-1">
               <h1 className='font-bold text-[#567CBD] text-2xl'>REGISTER</h1>
-              <p>Selamat Datang di aplikasi UpNext</p>
+              <p className="text-lg">Selamat Datang di aplikasi UpNext</p>
             </div>
             <Input title={"Email"} type='Email' label={"Masukkan email"}/>
             <Input title={"Password"} type='Password' label={"Masukkan password"}/>
