@@ -6,22 +6,53 @@ import ImgContent from '../assets/image-content.svg';
 import { Link } from "react-router-dom";
 
 const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const isFormValid = email.trim() !== '' && password.trim() !== '';
+
+  // const handleLogin = async () => {
+  //   try {
+  //     const response = await fetch('URL_Backend', { 
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Accept': 'application/json'
+  //       },
+  //       body: JSON.stringify({ email, password })
+  //     });
+  
+  //     const data = await response.json();
+  
+  //     if (response.ok) {
+  //       console.log('Login sukses:', data);
+  //       localStorage.setItem('token', data.token);
+  //     } else {
+  //       console.error('Login gagal:', data.message);
+  //       alert(data.message || 'Login gagal');
+  //     }
+  //   } catch (error) {
+  //     console.error('Terjadi kesalahan:', error);
+  //     alert('Terjadi kesalahan saat login');
+  //   }
+  // };
+
   return (
-    <div className='flex h-screen'>
-      <div className='flex-1 flex flex-col gap-6 justify-center items-center bg-[#567CBD]'>
+    <div className='md:flex h-screen'>
+      <div className='hidden flex-1 md:flex flex-col gap-6 justify-center items-center bg-[#567CBD]'>
         <img src={UpNextLogo} alt="logo" width={"40%"} />
         <h1 className='text-white w-3/4 text-center font-bold text-3xl'>Jelajahi berbagai event yang ada di UPNVJ</h1>
         <img src={ImgContent} alt="logo content" width={"50%"} />
       </div>
       <div className='flex-1 flex bg-white justify-center items-center flex-col'>
-        <div className='flex flex-col items-center w-3/5 gap-4 p-6'>
+        <div className='flex flex-col items-center w-4/5 md:w-3/5 gap-4 p-6'>
           <div className="flex flex-col items-center gap-1">
             <h1 className='font-bold text-[#567CBD] text-2xl'>LOGIN</h1>
-            <p className="text-lg">Selamat Datang di aplikasi UpNext</p>
+            <p className="text-lg text-center">Selamat Datang di aplikasi UpNext</p>
           </div>
-          <Input title={"Email"} type='Email' label={"Masukkan email"}/>
-          <Input title={"Password"} type='Password' label={"Masukkan password"}/>
-          <Button label={"Masuk"}/>
+          <Input title={"Email"} type='Email' label={"Masukkan email"} value={email} onChange={(e) => setEmail(e.target.value)}/>
+          <Input title={"Password"} type='Password' label={"Masukkan password"} value={password} onChange={(e) => setPassword(e.target.value)}/>
+          <Button label={"Masuk"} disabled={!isFormValid}/>
           <div className='flex flex-row gap-1'>
             <p>Belum punya akun? </p>
             <Link to="/register" className="font-bold text-[#567CBD]">Register</Link>
