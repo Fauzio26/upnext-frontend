@@ -6,7 +6,7 @@ import ImgContent from '../assets/image-content.svg';
 import {FileInput} from '../components/input-file';
 import { Link, Navigate } from "react-router-dom";
 
-export const Register = () => {
+const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
@@ -43,3 +43,5 @@ export const Register = () => {
     </div>
   );
 };
+
+export default Register;

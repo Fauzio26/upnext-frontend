@@ -5,7 +5,7 @@ import UpNextLogo from '../assets/logo-upnext.svg';
 import ImgContent from '../assets/image-content.svg';
 import { Link } from "react-router-dom";
 
-export const Login = () => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -34,3 +34,5 @@ export const Login = () => {
     </div>
   );
 }
+
+export default Login;

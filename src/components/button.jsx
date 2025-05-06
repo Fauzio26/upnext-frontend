@@ -1,6 +1,6 @@
 import React from "react";
 
-export const Button = ({ label, type = "button", onClick, value, disabled }) => {
+const Button = ({ label, type = "button", onClick, value, disabled }) => {
   let btnDisable = '';
 
   if (disabled) {
@@ -20,3 +20,5 @@ export const Button = ({ label, type = "button", onClick, value, disabled }) => 
     </button>
   );
 };
+
+export default Button;

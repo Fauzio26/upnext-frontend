@@ -5,7 +5,7 @@ import eventdb from "../eventdb.json"
 import {Button} from "../components/button";
 import {FilterButton} from "../components/filter";
 
-export const Event = () => {
+const Event = () => {
     const [search, setSearch] = useState('');
     const [query, setQuery] = useState('');
     const [activeFilter, setActiveFilter] = useState("A - Z");
@@ -74,3 +74,5 @@ export const Event = () => {
         </div>
     );
 }
+
+export default Event;

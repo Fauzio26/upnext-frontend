@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export const FileInput = ({title, onChange}) => {
+const FileInput = ({title, onChange}) => {
   const [fileName, setFileName] = useState('');
 
   const handleFile = (e) => {
@@ -35,3 +35,5 @@ export const FileInput = ({title, onChange}) => {
     </div>
   );
 }
+
+export default FileInput;

@@ -1,7 +1,7 @@
 import React from "react";
 import Image from '../assets/comifuro.jpg'
 
-export const CardEvent = ({title, dates, description}) => {
+const CardEvent = ({title, dates, description}) => {
     const eventDate = new Date(dates);
 
     return(
@@ -24,3 +24,5 @@ export const CardEvent = ({title, dates, description}) => {
         </div>
     );
 }
+
+export default CardEvent
