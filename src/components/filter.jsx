@@ -1,6 +1,6 @@
 import React from 'react'
 
-const FilterButton = ({label, isActive, onClick}) => {
+export const FilterButton = ({label, isActive, onClick}) => {
     let btnFilter = 'flex justify-center border-2 p-2 rounded-md transition-all duration-200'
 
     if (isActive) {
@@ -15,5 +15,3 @@ const FilterButton = ({label, isActive, onClick}) => {
         </div>
     );
 }
-
-export default FilterButton;

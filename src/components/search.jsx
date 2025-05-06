@@ -1,7 +1,7 @@
 import React from "react";
 import SearchIcon from "../assets/search-icon.svg";
 
-const Search = ({ value, onChange, onKeyDown }) => {
+export const Search = ({ value, onChange, onKeyDown }) => {
     return (
         <div className="w-full flex flex-col gap-2 relative">
             <div className="relative w-full">
@@ -22,5 +22,3 @@ const Search = ({ value, onChange, onKeyDown }) => {
         </div>
     );
 };
-
-export default Search;

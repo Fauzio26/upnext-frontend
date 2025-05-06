@@ -1,6 +1,6 @@
 import React from "react";
 
-const Input = ({ title, label, type = "text", onChange, value }) => {
+export const Input = ({ title, label, type = "text", onChange, value }) => {
     return (
         <div className='w-full flex flex-col gap-2'>
             <h4 className="font-medium">{title}</h4>
@@ -14,5 +14,3 @@ const Input = ({ title, label, type = "text", onChange, value }) => {
         </div>
     );
 }
-
-export default Input;

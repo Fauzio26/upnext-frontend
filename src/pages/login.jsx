@@ -1,44 +1,16 @@
 import React, { useState } from "react";
-import Input from '../components/input';
-import Button from '../components/button';
+import {Input} from '../components/input';
+import {Button} from '../components/button';
 import UpNextLogo from '../assets/logo-upnext.svg';
 import ImgContent from '../assets/image-content.svg';
 import { Link } from "react-router-dom";
 
-const Login = () => {
+export const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const isFormValid = email.trim() !== '' && password.trim() !== '';
-
-  // const handleLogin = async () => {
-  //   try {
-  //     const response = await fetch('URL_Backend', { 
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'Accept': 'application/json'
-  //       },
-  //       body: JSON.stringify({ email, password })
-  //     });
-  
-  //     const data = await response.json();
-  
-  //     if (response.ok) {
-  //       console.log('Login sukses:', data);
-  //       localStorage.setItem('token', data.token);
-  //     } else {
-  //       console.error('Login gagal:', data.message);
-  //       alert(data.message || 'Login gagal');
-  //     }
-  //   } catch (error) {
-  //     console.error('Terjadi kesalahan:', error);
-  //     alert('Terjadi kesalahan saat login');
-  //   }
-  // };
-
   return (
-    <div className='md:flex h-screen'>
+    <div className='flex min-h-screen'>
       <div className='hidden flex-1 md:flex flex-col gap-6 justify-center items-center bg-[#567CBD]'>
         <img src={UpNextLogo} alt="logo" width={"40%"} />
         <h1 className='text-white w-3/4 text-center font-bold text-3xl'>Jelajahi berbagai event yang ada di UPNVJ</h1>
@@ -52,7 +24,7 @@ const Login = () => {
           </div>
           <Input title={"Email"} type='Email' label={"Masukkan email"} value={email} onChange={(e) => setEmail(e.target.value)}/>
           <Input title={"Password"} type='Password' label={"Masukkan password"} value={password} onChange={(e) => setPassword(e.target.value)}/>
-          <Button label={"Masuk"} disabled={!isFormValid}/>
+          <Button label={"Masuk"} disabled={!email || !password}/>
           <div className='flex flex-row gap-1'>
             <p>Belum punya akun? </p>
             <Link to="/register" className="font-bold text-[#567CBD]">Register</Link>
@@ -62,5 +34,3 @@ const Login = () => {
     </div>
   );
 }
-
-export default Login;

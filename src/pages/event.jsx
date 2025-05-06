@@ -1,36 +1,16 @@
 import React, { useState, useEffect } from "react";
-import CardEvent from "../components/card";
-import Search from "../components/search";
+import {CardEvent} from "../components/card";
+import {Search} from "../components/search";
 import eventdb from "../eventdb.json"
-import Button from "../components/button";
-import FilterButton from "../components/filter";
+import {Button} from "../components/button";
+import {FilterButton} from "../components/filter";
 
-const Event = () => {
+export const Event = () => {
     const [search, setSearch] = useState('');
     const [query, setQuery] = useState('');
-    const [eventData, setEventData] = useState([]);
     const [activeFilter, setActiveFilter] = useState("A - Z");
 
     const filterCategory = ["A - Z", "Z - A", "Tanggal Terbaru", "Tanggal Terlama"];
-
-    // useEffect(() => {
-    //     const fetchEvents = async () => {
-    //       try {
-    //         const response = await fetch('URL_Backend', {
-    //           method: 'GET', 
-    //           headers: {
-    //             'Accept': 'application/json'
-    //           }
-    //         });
-    //         const data = await response.json();
-    //         setEventData(data);
-    //       } catch (error) {
-    //         console.error('Gagal ambil data event:', error);
-    //       }
-    //     };
-      
-    //     fetchEvents();
-    // }, []);
       
     const filteredEvents = eventdb.filter((event) =>
         event.title.toLowerCase().includes(search.toLowerCase())
@@ -73,21 +53,24 @@ const Event = () => {
                 <div className="w-full flex gap-4 flex-wrap md:flex-nowrap justify-start">
                     {filterCategory.map((label) => (
                     <FilterButton
-                        key={label}
-                        label={label}
-                        isActive={activeFilter === label}
-                        onClick={() => setActiveFilter(label)}
+                    key={label}
+                    label={label}
+                    isActive={activeFilter === label}
+                    onClick={() => setActiveFilter(label)}
                     />
                     ))}
                 </div>
-                <div className="w-full flex flex-wrap justify-start gap-6">
+                <div className="w-full grid grid-cols-2 justify-start gap-6 md:grid-cols-3">
                     {sortedEvents.map((event) => (
-                        <CardEvent key={event.id} title={event.title} dates={event.dates} description={event.description}/>
+                        <CardEvent 
+                        key={event.id} 
+                        title={event.title} 
+                        dates={event.dates} 
+                        description={event.description}
+                        />
                     ))}
                 </div>
             </div>
         </div>
     );
 }
-
-export default Event;
