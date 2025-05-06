@@ -3,6 +3,7 @@ import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 import Login from './pages/login'
 import Register from './pages/register'
 import Event from './pages/event'
+import Landing from './pages/landing'
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path='/login' element={<Login/>}/>
         <Route path='/register' element={<Register/>}/>
         <Route path='/event' element={<Event/>}/>
+        <Route path='/landing' element={<Landing/>}/>
       </Routes>
     </Router>
   )
