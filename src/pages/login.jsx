@@ -4,13 +4,14 @@ import Button from '../components/button';
 import UpNextLogo from '../assets/logo-upnext.svg';
 import ImgContent from '../assets/image-content.svg';
 import { Link } from "react-router-dom";
-
+import Navbar from "../components/navbar";
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   return (
     <div className="flex flex-col">
+    <Navbar/>
       <div className='flex min-h-screen'>
         <div className='hidden flex-1 md:flex flex-col gap-6 justify-center items-center bg-[#567CBD]'>
           <img src={UpNextLogo} alt="logo" width={"40%"} />
