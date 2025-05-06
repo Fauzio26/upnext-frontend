@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import {CardEvent} from "../components/card";
-import {Search} from "../components/search";
+import React, { useState } from "react";
+import CardEvent from "../components/card";
+import Search from "../components/search";
 import eventdb from "../eventdb.json"
-import {Button} from "../components/button";
-import {FilterButton} from "../components/filter";
+import Button from "../components/button";
+import FilterButton from "../components/filter";
 
 const Event = () => {
     const [search, setSearch] = useState('');
