@@ -4,10 +4,11 @@ import Button from '../components/button';
 import UpNextLogo from '../assets/logo-upnext.svg';
 import ImgContent from '../assets/image-content.svg';
 import { Link } from "react-router-dom";
-
+import Navbar from "../components/navbar";
 const Login = () => {
   return (
     <div className='flex h-screen'>
+      <Navbar/>
       <div className='flex-1 flex flex-col gap-6 justify-center items-center bg-[#567CBD]'>
         <img src={UpNextLogo} alt="logo" width={"40%"} />
         <h1 className='text-white w-3/4 text-center font-bold text-3xl'>Jelajahi berbagai event yang ada di UPNVJ</h1>
