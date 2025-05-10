@@ -5,6 +5,7 @@ import UpNextLogo from '../assets/logo-upnext.svg';
 import ImgContent from '../assets/image-content.svg';
 import FileInput from '../components/input-file';
 import { Link } from "react-router-dom";
+import Navbar from "../components/navbar";
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -15,6 +16,7 @@ const Register = () => {
 
   return (
     <div className="flex flex-col">
+      <Navbar/>
       <div className="flex min-h-screen">
         <div className="w-full flex-1 hidden md:flex flex-col gap-6 justify-center items-center bg-[#567CBD]">
           <img src={UpNextLogo} alt="logo" width={"40%"} />

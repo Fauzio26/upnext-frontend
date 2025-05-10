@@ -28,7 +28,7 @@ const Landing = () => {
       </section>
 
       {/* Features Section */}
-      <section className="bg-gradient-to-b from-[#f8faff] to-white py-16 px-5 text-center">
+      <section className="bg-gradient-to-b from-[#dbe7f4] to-white py-16 px-5 text-center">
         <h2 className="text-2xl text-blue-800 font-bold mb-10">Kenapa harus pakai UpNext?</h2>
         <div className="flex flex-wrap justify-center gap-8 max-w-7xl mx-auto">
           {[

@@ -4,6 +4,7 @@ import Search from "../components/search";
 import eventdb from "../eventdb.json"
 import Button from "../components/button";
 import FilterButton from "../components/filter";
+import Navbar from "../components/navbar";
 
 const Event = () => {
     const [search, setSearch] = useState('');
@@ -30,6 +31,7 @@ const Event = () => {
 
     return(
         <div className="flex flex-col">
+            <Navbar/>
             <div className="bg-[#567CBD] flex flex-col items-center p-6 gap-2">
                 <h1 className="text-white font-bold text-3xl text-center">Pengumuman Event Kampus Terkini</h1>
                 <p className="text-white text-lg text-center">Temukan semua pengumuman event terbaru yang penting dan menarik untuk kamu ikuti!</p>
