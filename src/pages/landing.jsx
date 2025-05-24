@@ -4,6 +4,7 @@ import Frame3 from "../assets/Frame3.svg";
 import Frame4 from "../assets/Frame4.svg";
 import Frame5 from "../assets/Frame5.svg";
 import Navbar from "../components/navbar";
+import { Link } from "react-router-dom";
 
 const Landing = () => {
   return (
