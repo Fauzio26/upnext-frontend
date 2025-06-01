@@ -1,9 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo-upnext.svg";
 
 export default function Navbar() {
+  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("isLoggedIn");
+    navigate("/login");
+  };
+
   return (
-    <nav className="fixed w-full z-50 bg-[#6a8bcb] text-white">
+    <nav className="sticky z-50 top-0 w-full bg-[#6a8bcb] text-white shadow-md">
       <div className="flex justify-between items-center px-4 py-3 max-w-[1200px] mx-auto">
         {/* Logo */}
         <div className="flex items-center space-x-2">
@@ -13,30 +22,67 @@ export default function Navbar() {
         {/* Menu Links */}
         <ul className="flex flex-row items-center justify-center gap-6">
           <li>
-            <a href="#" className="hover:text-[#1a1e2b] font-medium">
+            <Link to="/" className="hover:text-[#1a1e2b] font-medium">
               Beranda
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="#" className="hover:text-[#1a1e2b] font-medium">
+            <Link to="/event" className="hover:text-[#1a1e2b] font-medium">
               Event
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="#" className="hover:text-[#1a1e2b] font-medium">
+            <Link to="/about" className="hover:text-[#1a1e2b] font-medium">
               Tentang Kami
-            </a>
+            </Link>
           </li>
         </ul>
 
-        {/* Buttons */}
+        {/* Conditional Buttons */}
         <div className="flex space-x-4">
-          <button className="px-4 py-2 rounded-lg bg-[#6a8bcb] hover:bg-[#2d5182] text-white font-medium">
-            Sign In
-          </button>
-          <button className="px-4 py-2 rounded-lg bg-[#6a8bcb] hover:bg-[#2d5182] text-white font-medium">
-            Sign Up
-          </button>
+          {isLoggedIn ? (
+            <>
+              <Link
+                to="/createacara"
+                className="px-4 py-2 rounded-lg bg-[#6a8bcb] hover:bg-[#2d5182] text-white font-medium"
+              >
+                Create Event
+              </Link>
+              <Link
+                to="/myevents"
+                className="px-4 py-2 rounded-lg bg-[#6a8bcb] hover:bg-[#2d5182] text-white font-medium"
+              >
+                My Events
+              </Link>
+              <Link
+                to="/profile"
+                className="px-4 py-2 rounded-lg bg-[#6a8bcb] hover:bg-[#2d5182] text-white font-medium"
+              >
+                Profile
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="px-4 py-2 rounded-lg bg-[#6a8bcb] hover:bg-[#2d5182] text-white font-medium"
+              >
+                Sign In
+              </Link>
+              <Link
+                to="/register"
+                className="px-4 py-2 rounded-lg bg-[#6a8bcb] hover:bg-[#2d5182] text-white font-medium"
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </nav>
