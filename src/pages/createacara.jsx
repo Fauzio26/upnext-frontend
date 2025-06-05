@@ -86,33 +86,40 @@ eventPhotos.forEach((file) => formData.append("photos", file));
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
-      <div className="flex flex-1 items-center justify-center bg-gradient-to-b from-[#6a8bcb] to-[#dbe7f4] py-16 px-5">
+      <div className="flex flex-1 items-center justify-center bg-gradient-to-b from-[#6a8bcb] to-[#dbe7f4] py-16 px-5 ">
         <form
           onSubmit={handleSubmit}
-          className="bg-white p-8 rounded-lg shadow-md w-full max-w-lg"
+          className="bg-white p-8 rounded-lg shadow-md w-full max-w-lg flex flex-col gap-6"
           encType="multipart/form-data"
         >
-          <h2 className="text-2xl font-bold mb-6 text-center text-blue-800">
+          <h2 className="text-2xl font-bold text-center text-blue-800">
             Buat Acara Baru
           </h2>
 
           <Input
-            label={"Judul Acara"}
+            title={"Judul Acara"}
+            label={"Masukkan judul acara"}
             placeholder="Judul Acara"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
 
-          <textarea
-            placeholder="Deskripsi"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded mb-4"
-            rows="4"
-            required
-          />
+          <div className="flex flex-col gap-2">
+            <label className="block text-base font-medium">
+              Upload Foto Acara (banyak gambar)
+            </label>
+            <textarea
+              placeholder="Deskripsi"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded"
+              rows="4"
+              required
+            />
+          </div>
 
           <Input
+            title={"Tanggal Acara"}
             label={"Tanggal Acara"}
             type="date"
             value={date}
@@ -120,6 +127,7 @@ eventPhotos.forEach((file) => formData.append("photos", file));
           />
 
           <Input
+            title={"Waktu Acara"}
             label={"Waktu Acara"}
             type="time"
             value={time}
@@ -127,25 +135,26 @@ eventPhotos.forEach((file) => formData.append("photos", file));
           />
 
           <Input
-            label={"Link Pendaftaran"}
+            title={"Link Pendaftaran"}
+            label={"Masukkan link pendaftaran"}
             placeholder="Link Pendaftaran"
             value={registLink}
             onChange={(e) => setRegistLink(e.target.value)}
           />
 
           {/* Banner */}
-          <label className="block mt-4 mb-1 text-sm font-medium">
+          <label className="block text-base font-medium">
             Upload Banner (1 Gambar)
           </label>
           <input
             type="file"
             accept="image/*"
             onChange={(e) => handleFileChange(e, setBanner, true)}
-            className="mb-4"
+            className=""
           />
 
           {/* Dokumen */}
-          <label className="block mt-4 mb-1 text-sm font-medium">
+          <label className="block text-base font-medium">
             Upload Dokumen (.pdf, .doc, .docx)
           </label>
           <input
@@ -153,11 +162,11 @@ eventPhotos.forEach((file) => formData.append("photos", file));
             accept=".pdf,.doc,.docx"
             multiple
             onChange={(e) => handleFileChange(e, setDocuments)}
-            className="mb-4"
+            className=""
           />
 
           {/* Foto Acara */}
-          <label className="block mt-4 mb-1 text-sm font-medium">
+          <label className="block text-base font-medium">
             Upload Foto Acara (banyak gambar)
           </label>
           <input
@@ -165,7 +174,7 @@ eventPhotos.forEach((file) => formData.append("photos", file));
             accept="image/*"
             multiple
             onChange={(e) => handleFileChange(e, setEventPhotos)}
-            className="mb-6"
+            className=""
           />
 
           <Button type="submit" label="Simpan" />
