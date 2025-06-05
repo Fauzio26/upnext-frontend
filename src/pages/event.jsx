@@ -91,7 +91,6 @@ const Event = () => {
               description={event.description}
               bannerUrl={event.banners?.[0]?.url}
                 />
-
           ))}
         </div>
       </div>

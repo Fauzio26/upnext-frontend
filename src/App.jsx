@@ -9,7 +9,8 @@ import MyEvents from "./pages/myevents";
 import EditEvent from './pages/EditEvent'; 
 import Profile from './pages/profile'; 
 import EditProfile from './pages/editprofile';
-
+import AboutUs from './pages/aboutkami'
+import NotFound from './pages/notfound'
 
 function App() {
   return (
@@ -19,13 +20,13 @@ function App() {
         <Route path='/login' element={<Login/>}/>
         <Route path='/register' element={<Register/>}/>
         <Route path='/event' element={<Event/>}/>
-        <Route path='/landing' element={<Event/>}/>
         <Route path='/createacara' element={<CreateAcara/>}/>
-         <Route path='/myevents' element={<MyEvents/>}/>
-         <Route path="/edit-event/:id" element={<EditEvent />} />
+        <Route path='/myevents' element={<MyEvents/>}/>
+        <Route path="/edit-event/:id" element={<EditEvent />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/edit-profile" element={<EditProfile />} />
-
+        <Route path='/about' element={<AboutUs/>}/>
+        <Route path='*' element={<NotFound/>}/>
       </Routes>
     </Router>
   )
