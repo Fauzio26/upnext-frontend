@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Organization {
+  id              String       @id @default(uuid())
+  name            String
+  email           String       @unique
+  password        String
+  profilePic      String?
+  bannerPic       String?
+  membershipProof String
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  deletedAt       DateTime?
+
+  events          Event[]      @relation("organizationHasEvents")
+}
+
+model Event {
+  id              String       @id @default(uuid())
+  title           String
+  description     String
+  startDate       DateTime
+  endDate         DateTime
+  banner          Banner?
+  documents       Document[]
+  photos          EventPhoto[]
+  organization    Organization @relation("organizationHasEvents", fields: [organizationId], references: [id], onDelete: Restrict)
+  organizationId  String
+  registLink      String
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  deletedAt       DateTime?
+}
+
+model Banner {
+  id        String   @id @default(uuid())
+  url       String
+  publicId  String   
+  event     Event    @relation(fields: [eventId], references: [id])
+  eventId   String   @unique
+}
+
+model Document {
+  id        String   @id @default(uuid())
+  url       String
+  publicId  String   
+  event     Event    @relation(fields: [eventId], references: [id])
+  eventId   String
+}
+
+model EventPhoto {
+  id        String   @id @default(uuid())
+  url       String
+  publicId  String   
+  event     Event    @relation(fields: [eventId], references: [id])
+  eventId   String
+}
+
+

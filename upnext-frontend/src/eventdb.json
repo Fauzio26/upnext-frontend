@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "title": "Comifuro 17",
+    "dates": "2025-08-12",
+    "description": "Acara komunitas kreatif terbesar di Indonesia yang menghadirkan berbagai ilustrator, komikus, dan cosplayer."
+  },
+  {
+    "id": 2,
+    "title": "Japan Matsuri",
+    "dates": "2025-10-05",
+    "description": "Festival budaya Jepang dengan makanan, penampilan, dan workshop seru di Jakarta."
+  },
+  {
+    "id": 3,
+    "title": "Startup Weekend",
+    "dates": "2025-09-20",
+    "description": "Event 3 hari untuk membangun ide startup, pitching, dan mentoring langsung dengan praktisi industri."
+  },
+  {
+    "id": 4,
+    "title": "Gaming Expo 2025",
+    "dates": "2025-11-15",
+    "description": "Pameran game terbesar menampilkan rilis game terbaru, turnamen esports, dan booth developer indie."
+  },
+  {
+    "id": 5,
+    "title": "Indie Clothing Expo",
+    "dates": "2025-05-03",
+    "description": "Pameran fashion independen yang menghadirkan brand lokal, konser musik, dan talkshow inspiratif."
+  },
+  {
+    "id": 6,
+    "title": "Comic Frontier Mini",
+    "dates": "2025-12-10",
+    "description": "Versi kecil dari Comifuro, lebih intimate, tapi tetap penuh karya kreatif dari komunitas."
+  }
+]
