@@ -94,10 +94,7 @@ const MyEvents = () => {
         <div className="max-w-6xl mx-auto">
           <h1 className="text-2xl font-bold mb-4 text-blue-900">Event Saya</h1>
           {myEvents.length === 0 ? (
-            <>
-              <p className="text-white">Belum ada event yang dibuat.</p>
-        
-            </>
+            <p className="text-white">Belum ada event yang dibuat.</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {myEvents.map((event) => (
@@ -114,7 +111,11 @@ const MyEvents = () => {
                   <h2 className="font-bold text-lg">{event.title}</h2>
                   <p className="text-sm text-gray-600 mb-2">{event.description}</p>
                   <p className="text-xs text-gray-500 mb-2">
-                    {new Date(event.startDate).toLocaleString()}
+                    {new Date(event.startDate).toLocaleDateString("id-ID", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                    })}
                   </p>
                   <div className="flex gap-2">
                     <Button
