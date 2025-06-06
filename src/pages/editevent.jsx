@@ -10,8 +10,8 @@ function EditEvent() {
   const [judul, setJudul] = useState('');
   const [deskripsi, setDeskripsi] = useState('');
   const [linkRegistrasi, setLinkRegistrasi] = useState('');
-  const [tanggal, setTanggal] = useState('');
-  const [waktu, setWaktu] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const [banner, setBanner] = useState([]);
   const [bannerPreview, setBannerPreview] = useState([]);
   const [documents, setDocuments] = useState([]);
@@ -38,8 +38,9 @@ function EditEvent() {
         setJudul(data.title || '');
         setDeskripsi(data.description || '');
         setLinkRegistrasi(data.registrationLink || '');
-        setTanggal(data.date || '');
-        setWaktu(data.time || '');
+
+        if (data.startDate) setStartDate(data.startDate.slice(0, 10));
+        if (data.endDate) setEndDate(data.endDate.slice(0, 10));
 
         if (data.banner) {
           const fullUrls = data.banner.map(b => `${import.meta.env.VITE_API_URL}${b.url}`);
@@ -47,7 +48,6 @@ function EditEvent() {
         }
 
         if (data.documents) setDocNames(data.documents.map(doc => doc.originalName || doc.url));
-
         if (data.eventPhoto) {
           const photoUrls = data.eventPhoto.map(p => `${import.meta.env.VITE_API_URL}${p.url}`);
           setPhotoPreview(photoUrls);
@@ -92,24 +92,22 @@ function EditEvent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
+
+    if (!startDate || !endDate) {
+      alert('Tanggal mulai dan berakhir harus diisi');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('title', judul);
     formData.append('description', deskripsi);
     formData.append('registrationLink', linkRegistrasi);
-    formData.append('date', tanggal);
-    formData.append('time', waktu);
+    formData.append('startDate', new Date(`${startDate}T00:00:00`).toISOString());
+    formData.append('endDate', new Date(`${endDate}T23:59:59`).toISOString());
 
-    banner.forEach(file => {
-      formData.append('banner', file);
-    });
-
-    documents.forEach(file => {
-      formData.append('documents', file);
-    });
-
-    photos.forEach(file => {
-      formData.append('photos', file);
-    });
+    banner.forEach(file => formData.append('banner', file));
+    documents.forEach(file => formData.append('documents', file));
+    photos.forEach(file => formData.append('photos', file));
 
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/events/${id}`, {
@@ -140,63 +138,24 @@ function EditEvent() {
       <div className="container mx-auto p-4 mt-16">
         <h1 className="text-2xl font-bold mb-4">Edit Event</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            label="Judul Acara"
-            type="text"
-            value={judul}
-            onChange={(e) => setJudul(e.target.value)}
-            placeholder="Masukkan judul acara"
-          />
+          <Input label="Judul Acara" type="text" value={judul} onChange={(e) => setJudul(e.target.value)} />
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
-            <textarea
-              className="border rounded-md w-full p-2 focus:outline-none focus:ring focus:border-blue-300"
-              value={deskripsi}
-              onChange={(e) => setDeskripsi(e.target.value)}
-              placeholder="Masukkan deskripsi acara"
-              rows="4"
-            ></textarea>
+            <textarea className="border rounded-md w-full p-2" rows="4" value={deskripsi} onChange={(e) => setDeskripsi(e.target.value)} />
           </div>
-          <Input
-            label="Link Registrasi"
-            type="text"
-            value={linkRegistrasi}
-            onChange={(e) => setLinkRegistrasi(e.target.value)}
-            placeholder="Masukkan link registrasi acara"
-          />
-          <Input
-            label="Tanggal"
-            type="date"
-            value={tanggal}
-            onChange={(e) => setTanggal(e.target.value)}
-          />
-          <Input
-            label="Waktu"
-            type="time"
-            value={waktu}
-            onChange={(e) => setWaktu(e.target.value)}
-          />
+          <Input label="Link Registrasi" type="text" value={linkRegistrasi} onChange={(e) => setLinkRegistrasi(e.target.value)} />
+
+          <Input label="Tanggal Mulai" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+          <Input label="Tanggal Berakhir" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
 
           {/* Banner */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Upload Banner (max 1 Banner)
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleBannerChange}
-            />
+            <label className="block text-sm font-medium text-gray-700 mb-1">Upload Banner (max 1)</label>
+            <input type="file" accept="image/*" multiple onChange={handleBannerChange} />
             {bannerPreview.length > 0 && (
               <div className="flex gap-2 mt-2 flex-wrap">
                 {bannerPreview.map((src, index) => (
-                  <img
-                    key={index}
-                    src={src}
-                    alt={`Preview Banner ${index}`}
-                    className="w-24 h-24 object-cover rounded"
-                  />
+                  <img key={index} src={src} alt={`Banner ${index}`} className="w-24 h-24 object-cover rounded" />
                 ))}
               </div>
             )}
@@ -204,15 +163,8 @@ function EditEvent() {
 
           {/* Dokumen */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Upload Dokumen (max 5)
-            </label>
-            <input
-              type="file"
-              multiple
-              onChange={handleDocsChange}
-              className="mt-1 block w-full"
-            />
+            <label className="block text-sm font-medium text-gray-700 mb-1">Upload Dokumen (max 5)</label>
+            <input type="file" multiple onChange={handleDocsChange} />
             <div className="mt-2">
               {docNames.map((name, index) => (
                 <p key={index} className="text-sm text-gray-600">{name}</p>
@@ -222,24 +174,12 @@ function EditEvent() {
 
           {/* Foto Acara */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Upload Foto Acara (max 5)
-            </label>
-            <input
-              type="file"
-              multiple
-              accept="image/*"
-              onChange={handlePhotosChange}
-            />
+            <label className="block text-sm font-medium text-gray-700 mb-1">Upload Foto Acara (max 5)</label>
+            <input type="file" multiple accept="image/*" onChange={handlePhotosChange} />
             {photoPreview.length > 0 && (
               <div className="flex gap-2 mt-2 flex-wrap">
                 {photoPreview.map((src, index) => (
-                  <img
-                    key={index}
-                    src={src}
-                    alt={`Preview Foto ${index}`}
-                    className="w-24 h-24 object-cover rounded"
-                  />
+                  <img key={index} src={src} alt={`Foto ${index}`} className="w-24 h-24 object-cover rounded" />
                 ))}
               </div>
             )}
