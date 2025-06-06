@@ -12,14 +12,14 @@ function EditEvent() {
   const [lokasi, setLokasi] = useState('');
   const [tanggal, setTanggal] = useState('');
   const [waktu, setWaktu] = useState('');
-  const [banners, setBanners] = useState([]);
-  const [bannerPreviews, setBannerPreviews] = useState([]);
+  const [banner, setBanner] = useState([]);
+  const [bannerPreview, setBannerPreview] = useState([]);
   const [documents, setDocuments] = useState([]);
   const [docNames, setDocNames] = useState([]);
 
     useEffect(() => {
   const token = localStorage.getItem('token');
-  fetch(`http://localhost:5000/api/events/${id}`, {
+  fetch(`https://upnextapi.vercel.app/events/${id}`, {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -40,9 +40,9 @@ function EditEvent() {
       setWaktu(data.time || '');
 
       // Pastikan gambar banner muncul dengan benar
-      if (data.banners) {
-        const fullUrls = data.banners.map(b => `http://localhost:5000${b.url}`);
-        setBannerPreviews(fullUrls); // Update preview gambar
+      if (data.banner) {
+        const fullUrls = data.banner.map(b => `https://upnextapi.vercel.app${b.url}`);
+        setBannerPreview(fullUrls); // Update preview gambar
       }
 
       if (data.documents) setDocNames(data.documents);
@@ -58,10 +58,10 @@ function EditEvent() {
       alert('Maksimal 5 banner!');
       files.splice(5);
     }
-    setBanners(files);
+    setBanner(files);
     // Generate preview URLs untuk gambar
     const previews = files.map(file => URL.createObjectURL(file));
-    setBannerPreviews(previews);
+    setBannerPreview(previews);
   };
 
   const handleDocsChange = (e) => {
@@ -87,8 +87,8 @@ const handleSubmit = async (e) => {
 
 
   // Upload hanya jika ada file baru
-  banners.forEach(file => {
-    formData.append('banners', file);
+  banner.forEach(file => {
+    formData.append('banner', file);
   });
 
   documents.forEach(file => {
@@ -96,7 +96,7 @@ const handleSubmit = async (e) => {
   });
 
   try {
-    const response = await fetch(`http://localhost:5000/api/events/${id}`, {
+    const response = await fetch(`https://upnextapi.vercel.app/events/${id}`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -162,27 +162,22 @@ const handleSubmit = async (e) => {
             onChange={(e) => setWaktu(e.target.value)}
           />
           <div>
+
+            
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Upload Banner (max 5)
             </label>
-            <input
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleBannerChange}
-              className="mt-1 block w-full"
-            />
-            <div className="flex flex-wrap gap-2 mt-2">
-              {bannerPreviews.map((src, index) => (
-                <img
-                  key={index}
-                  src={src}
-                  alt={`banner preview ${index}`}
-                  className="w-24 h-24 object-cover rounded"
-                />
-              ))}
-            </div>
+           <input
+  type="file"
+  accept="image/*"
+  onChange={handleBannerChange}
+/>
+{bannerPreview && (
+  <img src={bannerPreview} alt="Preview Banner" className="w-24 h-24 object-cover rounded mt-2" />
+)}
+
           </div>
+          
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Upload Dokumen (max 5)

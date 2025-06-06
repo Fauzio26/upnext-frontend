@@ -33,10 +33,11 @@ const Register = () => {
     formData.append("name", name);
     formData.append("email", email);
     formData.append("password", password);
-    formData.append("file", fileInput); // sesuaikan nama field jika backend butuh
+  formData.append("membershipProof", fileInput); // ✅ match with backend
+ // sesuaikan nama field jika backend butuh
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/signup", {
+      const res = await fetch(`https://upnextapi.vercel.app/auth/signup`, {
         method: "POST",
         body: formData
       });
@@ -44,9 +45,12 @@ const Register = () => {
       const result = await res.json();
 
       if (res.ok) {
-        localStorage.setItem("isLoggedIn", "true");
-        navigate("/landing");
-      } else {
+  // ✅ Simpan token ke localStorage
+  localStorage.setItem("token", result.data.token);
+  localStorage.setItem("isLoggedIn", "true");
+  navigate("/landing");
+}
+ else {
         alert(result.message || "Gagal mendaftar");
       }
     } catch (err) {
@@ -55,28 +59,71 @@ const Register = () => {
     }
   };
 
-  return (
+ return (
     <div className="flex flex-col">
       <Navbar />
       <div className="flex min-h-screen">
         <div className="w-full flex-1 hidden md:flex flex-col gap-6 justify-center items-center bg-[#567CBD]">
           <img src={UpNextLogo} alt="logo" width={"40%"} />
           <h1 className="text-white w-3/4 text-center font-bold text-3xl">
-            Jelajahi dan temukan event terbaik di kotamu!
+            Jelajahi berbagai event yang ada di UPNVJ
           </h1>
-          <img src={ImgContent} alt="illustration" />
+          <img src={ImgContent} alt="logo content" width={"50%"} />
         </div>
-        <div className="w-full flex-1 flex items-center justify-center">
-          <form className="w-3/4 max-w-md flex flex-col gap-4" onSubmit={handleRegister}>
-            <Input placeholder="Nama" value={name} onChange={(e) => setName(e.target.value)} />
-            <Input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-            <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-            <Input type="password" placeholder="Konfirmasi Password" value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)} />
-           <FileInput onChange={(file) => setFileInput(file)} />
-            <Button type="submit" label="Daftar" />
-            <p className="text-center text-sm">
-              Sudah punya akun? <Link to="/login" className="text-blue-500">Masuk</Link>
-            </p>
+        <div className="flex-1 flex bg-white justify-center items-center flex-col">
+          <form 
+            className="flex flex-col items-center w-4/5 md:w-3/5 gap-4 p-6"
+            onSubmit={ handleRegister}
+          >
+            <div className="flex flex-col items-center gap-1">
+              <h1 className="font-bold text-[#567CBD] text-2xl">REGISTER</h1>
+              <p className="text-lg text-center">Selamat Datang di aplikasi UpNext</p>
+            </div>
+            <Input
+              title={"Nama"}
+              type="text"
+              label={"Masukkan nama"}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+            <Input
+              title={"Email"}
+              type="email"
+              label={"Masukkan email"}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <Input
+              title={"Password"}
+              type="password"
+              label={"Masukkan password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <Input
+              title={"Konfirmasi Password"}
+              type="password"
+              label={"Konfirmasi password"}
+              value={passwordConfirm}
+              onChange={(e) => setPasswordConfirm(e.target.value)}
+              required
+            />
+            <FileInput
+              title={"File Bukti Organisasi"}
+              onChange={(file) => setFileInput(file)}
+            />
+            <Button
+              label={"Daftar"}
+              type="submit"
+              disabled={!name || !email || !password || !passwordConfirm || !fileInput}
+            />
+            <div className="flex flex-row gap-1">
+              <p>Sudah punya akun?</p>
+              <Link to="/login" className="font-bold text-[#567CBD]">Login</Link>
+            </div>
           </form>
         </div>
       </div>

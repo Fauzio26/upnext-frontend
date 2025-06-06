@@ -8,22 +8,37 @@ const MyEvents = () => {
   const navigate = useNavigate();
 
   const fetchMyEvents = async () => {
+    const token = localStorage.getItem("token");
+    console.log("📦 Token:", token);
+
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:5000/api/events/my", {
+      const response = await fetch(`https://upnextapi.vercel.app/events/my`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      const data = await response.json();
-      if (response.ok) {
-        setMyEvents(data.data);
-      } else {
-        alert(data.message || "Gagal memuat event");
+
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await response.text();
+        console.error("❌ Bukan JSON:", text);
+        return;
       }
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        console.error("❌ API Error:", result.message || "Unknown error");
+        return;
+      }
+
+      console.log("📦 Full API result:", result);
+
+      const events = result?.data?.event || [];
+      setMyEvents(Array.isArray(events) ? events : []);
+      console.log("📦 Events:", events);
     } catch (error) {
-      console.error(error);
-      alert("Terjadi kesalahan saat mengambil data.");
+      console.error("❌ Error fetching events:", error);
     }
   };
 
@@ -31,13 +46,18 @@ const MyEvents = () => {
     if (!window.confirm("Yakin ingin menghapus event ini?")) return;
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`http://localhost:5000/api/events/${id}`, {
+      const response = await fetch(`https://upnextapi.vercel.app/events/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      const data = await response.json();
+
+      const contentType = response.headers.get("content-type");
+      const data = contentType?.includes("application/json")
+        ? await response.json()
+        : { message: await response.text() };
+
       if (response.ok) {
         alert("Event berhasil dihapus");
         fetchMyEvents();
@@ -54,26 +74,42 @@ const MyEvents = () => {
     fetchMyEvents();
   }, []);
 
+  const resolveImageUrl = (event) => {
+    const rawUrl = event.banner?.url || event.banners?.[0]?.url;
+    console.log("🖼 rawUrl =", rawUrl);
+
+    if (!rawUrl || typeof rawUrl !== "string") {
+      return "https://placehold.co/300x160?text=No+Image";
+    }
+
+    return rawUrl.startsWith("http")
+      ? rawUrl
+      : `${import.meta.env.VITE_API_URL}${rawUrl}`;
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
-      <div className="p-6">
-        <h1 className="text-2xl font-bold mb-4 text-blue-800">Event Saya</h1>
-        {myEvents.length === 0 ? (
-          <p>Belum ada event yang dibuat.</p>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {myEvents.map((event) => {
-              const imageUrl = event.banners?.[0]?.url
-                ? `http://localhost:5000${event.banners[0].url}`
-                : "https://via.placeholder.com/300x160?text=No+Image";
-
-              return (
+      <div className="flex-1 bg-gradient-to-b from-blue-200 to-blue-500 p-6">
+        <div className="max-w-6xl mx-auto">
+          <h1 className="text-2xl font-bold mb-4 text-blue-900">Event Saya</h1>
+          {myEvents.length === 0 ? (
+            <>
+              <p className="text-white">Belum ada event yang dibuat.</p>
+        
+            </>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {myEvents.map((event) => (
                 <div key={event.id} className="bg-white rounded-lg shadow-md p-4">
                   <img
-                    src={imageUrl}
+                    src={resolveImageUrl(event)}
                     alt={event.title}
                     className="w-full h-40 object-cover rounded mb-2"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = "https://placehold.co/300x160?text=No+Image";
+                    }}
                   />
                   <h2 className="font-bold text-lg">{event.title}</h2>
                   <p className="text-sm text-gray-600 mb-2">{event.description}</p>
@@ -92,10 +128,10 @@ const MyEvents = () => {
                     />
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

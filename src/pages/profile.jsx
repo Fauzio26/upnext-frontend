@@ -15,24 +15,38 @@ const Profile = () => {
       return;
     }
 
-    fetch("http://localhost:5000/api/organizations/me", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then(async (res) => {
-        if (!res.ok) {
-          const text = await res.text();
-          throw new Error(`Fetch error: ${res.status}, ${text}`);
+    const fetchProfile = async () => {
+      try {
+        const response = await fetch(`https://upnextapi.vercel.app/organizations/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          console.error("❌ API Error:", data.message || "Unknown error");
+          alert("Gagal mengambil profil: " + (data.message || "Unknown error"));
+          return;
         }
-        return res.json();
-      })
-      .then((data) => setUser(data))
-      .catch((err) => {
-        console.error("Error fetching profile:", err);
+
+        if (!data.id) {
+          console.warn("⚠️ Data organisasi tidak valid:", data);
+          alert("Data organisasi tidak ditemukan.");
+          return;
+        }
+
+        setUser(data);
+      } catch (err) {
+        console.error("❌ Error fetching profile:", err);
         alert("Terjadi kesalahan saat mengambil data profil.");
-      })
-      .finally(() => setLoading(false));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
   }, []);
 
   if (loading) return <div className="text-center mt-20">Loading...</div>;
@@ -40,40 +54,39 @@ const Profile = () => {
   return (
     <>
       <Navbar />
-      <div className="max-w-3xl mx-auto mt-20 p-6 bg-white shadow-md rounded-xl">
-        <h1 className="text-3xl font-bold mb-6 text-center">Profil Organisasi</h1>
-        {user ? (
-          <div className="space-y-4">
-            <div>
-              <span className="font-semibold">Nama:</span> {user.name}
+      <div className="min-h-screen bg-gradient-to-b from-blue-200 to-blue-500 flex justify-center items-start pt-20">
+        <div className="w-full max-w-4xl bg-white shadow-xl rounded-xl overflow-hidden">
+          {/* Banner */}
+          {user?.bannerPic && (
+            <div className="relative h-52 bg-gray-200">
+              <img
+                src={user.bannerPic}
+                alt="Banner"
+                className="object-cover w-full h-full"
+              />
+              {/* Profile picture */}
+              {user?.profilePic && (
+                <img
+                  src={user.profilePic}
+                  alt="Profile"
+                  className="absolute left-1/2 transform -translate-x-1/2 -bottom-16 w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover"
+                />
+              )}
             </div>
-            <div>
-              <span className="font-semibold">Email:</span> {user.email}
-            </div>
-            {user.profilePic && (
-              <div>
-                <span className="font-semibold">Foto Profil:</span><br />
-                <img src={`http://localhost:5000/${user.profilePic}`} alt="Profile" className="w-32 h-32 object-cover rounded-full mt-2" />
-              </div>
-            )}
-            {user.bannerPic && (
-              <div>
-                <span className="font-semibold">Banner:</span><br />
-                <img src={`http://localhost:5000/${user.bannerPic}`} alt="Banner" className="w-full h-48 object-cover mt-2 rounded-md" />
-              </div>
-            )}
-            <div className="text-right">
-              <button
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition"
-                onClick={() => navigate("/edit-profile")}
-              >
-                Edit Profile
-              </button>
-            </div>
+          )}
+
+          {/* Info section */}
+          <div className="mt-20 text-center p-6">
+            <h2 className="text-2xl font-semibold">{user?.name}</h2>
+            <p className="text-gray-600">{user?.email}</p>
+            <button
+              onClick={() => navigate("/edit-profile")}
+              className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition"
+            >
+              Edit Profil
+            </button>
           </div>
-        ) : (
-          <p>Data profil tidak ditemukan.</p>
-        )}
+        </div>
       </div>
     </>
   );

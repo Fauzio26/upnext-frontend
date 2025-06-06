@@ -10,22 +10,43 @@ const Event = () => {
   const [search, setSearch] = useState('');
   const [query, setQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState("A - Z");
+  const [loading, setLoading] = useState(true);
 
   const filterCategory = ["A - Z", "Z - A", "Tanggal Terbaru", "Tanggal Terlama"];
 
-  // Ambil data event dari backend
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/events");
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          console.error("Token tidak ditemukan. Login dulu.");
+          setLoading(false);
+          return;
+        }
+
+        const response = await fetch(`https://upnextapi.vercel.app/events`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
         const data = await response.json();
-        if (response.ok) {
-          setEvents(data.data); // pastikan struktur `data.data` sesuai responseFormatter.js
+        console.log("Full Response:", data);
+
+        if (response.ok && Array.isArray(data.data?.events)) {
+          setEvents(data.data.events);
         } else {
-          console.error("Gagal fetch event:", data.message);
+          console.error("❌ Format data tidak sesuai:", data);
+          alert("Gagal memuat event. Format data tidak sesuai.");
         }
       } catch (error) {
         console.error("Terjadi kesalahan:", error);
+        alert("Terjadi kesalahan saat memuat event.");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -53,8 +74,11 @@ const Event = () => {
       <Navbar />
       <div className="bg-[#567CBD] flex flex-col items-center p-6 gap-2">
         <h1 className="text-white font-bold text-3xl text-center">Pengumuman Event Kampus Terkini</h1>
-        <p className="text-white text-lg text-center">Temukan semua pengumuman event terbaru yang penting dan menarik untuk kamu ikuti!</p>
+        <p className="text-white text-lg text-center">
+          Temukan semua pengumuman event terbaru yang penting dan menarik untuk kamu ikuti!
+        </p>
       </div>
+
       <div className="flex flex-col p-6 gap-6">
         <div className="flex gap-2 w-full">
           <div className="w-full">
@@ -82,17 +106,24 @@ const Event = () => {
             />
           ))}
         </div>
-        <div className="w-full grid grid-cols-2 justify-start gap-6 md:grid-cols-3">
-          {sortedEvents.map((event) => (
-           <CardEvent
-              key={event.id}
-              title={event.title}
-              dates={event.startDate}
-              description={event.description}
-              bannerUrl={event.banners?.[0]?.url}
-                />
-          ))}
-        </div>
+
+        {loading ? (
+          <div className="text-center w-full py-10 text-lg text-gray-600">Memuat event...</div>
+        ) : sortedEvents.length > 0 ? (
+          <div className="w-full grid grid-cols-2 justify-start gap-6 md:grid-cols-3">
+            {sortedEvents.map((event) => (
+              <CardEvent
+                key={event.id}
+                title={event.title}
+                dates={event.startDate}
+                description={event.description}
+                bannerUrl={event.banner?.url}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center w-full py-10 text-lg text-gray-600">Tidak ada event ditemukan.</div>
+        )}
       </div>
     </div>
   );

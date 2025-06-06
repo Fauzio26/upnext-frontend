@@ -1,10 +1,10 @@
-
+import React from "react";
 
 const CardEvent = ({ title, dates, description, bannerUrl }) => {
   const eventDate = new Date(dates);
   const fullBannerUrl = bannerUrl?.startsWith("http")
     ? bannerUrl
-    : `http://localhost:5000${bannerUrl}`;
+    : `https://upnextapi.vercel.app${bannerUrl}`;
 
   return (
     <div className="w-full h-auto bg-[#F5EFEB] flex flex-col rounded-md shadow">
