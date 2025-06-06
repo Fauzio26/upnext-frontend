@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const FileInput = ({ title = "Upload File", onChange }) => {
+const FileInput = ({ title = "Upload File", onChange, accept, multiple }) => {
   const [fileName, setFileName] = useState('');
 
   const handleFile = (e) => {
@@ -33,6 +33,8 @@ const FileInput = ({ title = "Upload File", onChange }) => {
           type="file"
           onChange={handleFile}
           className="hidden"
+          accept={accept}
+          multiple={multiple}
         />
       </div>
     </div>

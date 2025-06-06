@@ -61,7 +61,7 @@ const EditProfile = () => {
   };
 
   return (
-    <>
+    <div>
       <Navbar />
       <div className="flex justify-center bg-gradient-to-b from-blue-200 to-blue-500 min-h-screen py-12">
         <div className="max-w-2xl w-full bg-white shadow-md rounded-xl p-6">
@@ -93,7 +93,7 @@ const EditProfile = () => {
           </form>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

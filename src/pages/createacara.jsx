@@ -3,6 +3,7 @@ import Input from "../components/input";
 import Button from "../components/button";
 import Navbar from "../components/navbar";
 import { useNavigate } from "react-router-dom";
+import FileInput from "../components/input-file";
 
 const CreateAcara = () => {
   const [title, setTitle] = useState("");
@@ -112,7 +113,7 @@ eventPhotos.forEach((file) => formData.append("photos", file));
               placeholder="Deskripsi"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded"
+              className="w-full p-2 text-base border-2 border-gray-400 rounded-md outline-none transition-all duration-300 focus:border-[#567CBD]"
               rows="4"
               required
             />
@@ -143,40 +144,28 @@ eventPhotos.forEach((file) => formData.append("photos", file));
           />
 
           {/* Banner */}
-          <label className="block text-base font-medium">
-            Upload Banner (1 Gambar)
-          </label>
-          <input
-            type="file"
-            accept="image/*"
+          <FileInput 
+            title="Upload Banner (1 Gambar)"
             onChange={(e) => handleFileChange(e, setBanner, true)}
-            className=""
+            accept={"image/*"}
+            multiple
           />
 
           {/* Dokumen */}
-          <label className="block text-base font-medium">
-            Upload Dokumen (.pdf, .doc, .docx)
-          </label>
-          <input
-            type="file"
-            accept=".pdf,.doc,.docx"
-            multiple
+          <FileInput
+            title="Upload Dokumen (.pdf, .doc, .docx)"
             onChange={(e) => handleFileChange(e, setDocuments)}
-            className=""
+            accept={".pdf,.doc,.docx"}
+            multiple
           />
 
           {/* Foto Acara */}
-          <label className="block text-base font-medium">
-            Upload Foto Acara (banyak gambar)
-          </label>
-          <input
-            type="file"
-            accept="image/*"
+          <FileInput 
+            title={"Upload Foto Acara (banyak gambar)"}
+            onChange={(e) => handleFileChange(e, setDocuments)}
+            accept={"image/*"}
             multiple
-            onChange={(e) => handleFileChange(e, setEventPhotos)}
-            className=""
           />
-
           <Button type="submit" label="Simpan" />
         </form>
       </div>
