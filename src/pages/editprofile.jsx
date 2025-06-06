@@ -8,7 +8,7 @@ const EditProfile = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    fetch(`https://upnextapi.vercel.app/organizations/me`, {
+    fetch(`${import.meta.env.VITE_API_URL}/organizations/me`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -39,7 +39,7 @@ const EditProfile = () => {
     if (form.bannerPic) formData.append("bannerPic", form.bannerPic);
 
     try {
-      const res = await fetch(`https://upnextapi.vercel.app/organizations/me`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/organizations/me`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,

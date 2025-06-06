@@ -17,7 +17,7 @@ const Profile = () => {
 
     const fetchProfile = async () => {
       try {
-        const response = await fetch(`https://upnextapi.vercel.app/organizations/me`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/organizations/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

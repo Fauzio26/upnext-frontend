@@ -19,7 +19,7 @@ function EditEvent() {
 
     useEffect(() => {
   const token = localStorage.getItem('token');
-  fetch(`https://upnextapi.vercel.app/events/${id}`, {
+  fetch(`${import.meta.env.VITE_API_URL}/events/${id}`, {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -41,7 +41,7 @@ function EditEvent() {
 
       // Pastikan gambar banner muncul dengan benar
       if (data.banner) {
-        const fullUrls = data.banner.map(b => `https://upnextapi.vercel.app${b.url}`);
+        const fullUrls = data.banner.map(b => `${import.meta.env.VITE_API_URL}${b.url}`);
         setBannerPreview(fullUrls); // Update preview gambar
       }
 
@@ -96,7 +96,7 @@ const handleSubmit = async (e) => {
   });
 
   try {
-    const response = await fetch(`https://upnextapi.vercel.app/events/${id}`, {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/events/${id}`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${token}`,

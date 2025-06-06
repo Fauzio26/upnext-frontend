@@ -12,7 +12,7 @@ const MyEvents = () => {
     console.log("📦 Token:", token);
 
     try {
-      const response = await fetch(`https://upnextapi.vercel.app/events/my`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/events/my`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -46,7 +46,7 @@ const MyEvents = () => {
     if (!window.confirm("Yakin ingin menghapus event ini?")) return;
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`https://upnextapi.vercel.app/events/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/events/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

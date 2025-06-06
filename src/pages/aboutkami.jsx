@@ -9,6 +9,9 @@ import LogoGithub from "../assets/github.svg"
 import LogoInsta from "../assets/instagram.svg"
 import LogoTailwind from "../assets/tailwind-logo.png"
 import LogoReact from "../assets/react-logo.png"
+import LogoExpress from "../assets/express.png"
+import LogoNode from "../assets/node.png"
+
 
 const AboutUs = () => {
     return(
@@ -119,6 +122,8 @@ const AboutUs = () => {
                 <div className="flex flex-row justify-center items-center gap-6">
                     <img src={LogoReact} alt="react-logo" className="h-20"/>
                     <img src={LogoTailwind} alt="tailwind-logo" className="h-8"/>
+                    <img src={LogoExpress} alt="express-logo" className="h-16"/>
+                    <img src={LogoNode} alt="node-react" className="h-16" />
                 </div>
             </div>
         </div>

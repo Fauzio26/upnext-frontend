@@ -8,7 +8,7 @@ const CreateAcara = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [registLink, setRegistLink] = useState("");
   const [banner, setBanner] = useState(null);
   const [documents, setDocuments] = useState([]);
@@ -22,71 +22,70 @@ const CreateAcara = () => {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!title || !description || !date || !time || !registLink) {
-    alert("Semua field wajib diisi.");
-    return;
-  }
-
-  const startDateTime = new Date(`${date}T${time}`);
-  const endDateTime = new Date(startDateTime.getTime() + 2 * 60 * 60 * 1000); // +2 jam
-
-  const formData = new FormData();
-  formData.append("title", title);
-  formData.append("description", description);
-  formData.append("startDate", startDateTime.toISOString());
-  formData.append("endDate", endDateTime.toISOString());
-  formData.append("registLink", registLink);
-
-  if (banner) formData.append("banner", banner);
-documents.forEach((file) => formData.append("documents", file));
-eventPhotos.forEach((file) => formData.append("photos", file));
-
-
-  for (const pair of formData.entries()) {
-    console.log(pair[0]+ ': ' + (pair[1] instanceof File ? pair[1].name : pair[1]));
-  }
-
-  try {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("Token tidak ditemukan. Silakan login ulang.");
+    if (!title || !description || !date || !endDate || !registLink) {
+      alert("Semua field wajib diisi.");
       return;
     }
 
-    const response = await fetch(`https://upnextapi.vercel.app/events`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    });
+    const startDateTime = new Date(`${date}T00:00:00`);
+    const endDateTime = new Date(`${endDate}T23:59:59`);
 
-    if (response.ok) {
-      alert("Event berhasil dibuat!");
-      navigate("/event");
-    } else {
-      const text = await response.text();
-      try {
-        const errorData = JSON.parse(text);
-        alert(`Gagal membuat event: ${errorData.message || "Terjadi kesalahan."}`);
-      } catch {
-        console.error("Unexpected response:", text);
-        alert("Gagal membuat event: Server mengembalikan respon yang tidak terduga.");
-      }
+    if (endDateTime < startDateTime) {
+      alert("Tanggal berakhir harus setelah tanggal mulai.");
+      return;
     }
-  } catch (err) {
-    console.error("Error:", err);
-    alert("Terjadi kesalahan saat menghubungi server.");
-  }
-};
 
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("startDate", startDateTime.toISOString());
+    formData.append("endDate", endDateTime.toISOString());
+    formData.append("registLink", registLink);
+
+    if (banner) formData.append("banner", banner);
+    documents.forEach((file) => formData.append("documents", file));
+    eventPhotos.forEach((file) => formData.append("photos", file));
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Token tidak ditemukan. Silakan login ulang.");
+        return;
+      }
+
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/events`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      if (response.ok) {
+        alert("Event berhasil dibuat!");
+        navigate("/event");
+      } else {
+        const text = await response.text();
+        try {
+          const errorData = JSON.parse(text);
+          alert(`Gagal membuat event: ${errorData.message || "Terjadi kesalahan."}`);
+        } catch {
+          console.error("Unexpected response:", text);
+          alert("Gagal membuat event: Server mengembalikan respon yang tidak terduga.");
+        }
+      }
+    } catch (err) {
+      console.error("Error:", err);
+      alert("Terjadi kesalahan saat menghubungi server.");
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
-      <div className="flex flex-1 items-center justify-center bg-gradient-to-b from-[#6a8bcb] to-[#dbe7f4] py-16 px-5 ">
+      <div className="flex flex-1 items-center justify-center bg-gradient-to-b from-[#6a8bcb] to-[#dbe7f4] py-16 px-5">
         <form
           onSubmit={handleSubmit}
           className="bg-white p-8 rounded-lg shadow-md w-full max-w-lg flex flex-col gap-6"
@@ -105,9 +104,7 @@ eventPhotos.forEach((file) => formData.append("photos", file));
           />
 
           <div className="flex flex-col gap-2">
-            <label className="block text-base font-medium">
-              Upload Foto Acara (banyak gambar)
-            </label>
+            <label className="block text-base font-medium">Deskripsi Acara</label>
             <textarea
               placeholder="Deskripsi"
               value={description}
@@ -118,22 +115,25 @@ eventPhotos.forEach((file) => formData.append("photos", file));
             />
           </div>
 
+          {/* Tanggal Mulai */}
           <Input
-            title={"Tanggal Acara"}
-            label={"Tanggal Acara"}
+            title={"Tanggal Mulai"}
+            label={"Tanggal Mulai"}
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
           />
 
+          {/* Tanggal Berakhir */}
           <Input
-            title={"Waktu Acara"}
-            label={"Waktu Acara"}
-            type="time"
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
+            title={"Tanggal Berakhir"}
+            label={"Tanggal Berakhir"}
+            type="date"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
           />
 
+          {/* Link Pendaftaran */}
           <Input
             title={"Link Pendaftaran"}
             label={"Masukkan link pendaftaran"}
@@ -150,7 +150,6 @@ eventPhotos.forEach((file) => formData.append("photos", file));
             type="file"
             accept="image/*"
             onChange={(e) => handleFileChange(e, setBanner, true)}
-            className=""
           />
 
           {/* Dokumen */}
@@ -162,10 +161,9 @@ eventPhotos.forEach((file) => formData.append("photos", file));
             accept=".pdf,.doc,.docx"
             multiple
             onChange={(e) => handleFileChange(e, setDocuments)}
-            className=""
           />
 
-          {/* Foto Acara */}
+          {/* Foto Dokumentasi */}
           <label className="block text-base font-medium">
             Upload Foto Acara (banyak gambar)
           </label>
@@ -174,7 +172,6 @@ eventPhotos.forEach((file) => formData.append("photos", file));
             accept="image/*"
             multiple
             onChange={(e) => handleFileChange(e, setEventPhotos)}
-            className=""
           />
 
           <Button type="submit" label="Simpan" />

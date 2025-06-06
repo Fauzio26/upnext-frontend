@@ -25,7 +25,7 @@ const Event = () => {
           return;
         }
 
-        const response = await fetch(`https://upnext-be.vercel.app/events`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/events`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -63,9 +63,9 @@ const Event = () => {
     sortedEvents.sort((a, b) => a.title.localeCompare(b.title));
   } else if (activeFilter === "Z - A") {
     sortedEvents.sort((a, b) => b.title.localeCompare(a.title));
-  } else if (activeFilter === "Tanggal Terbaru") {
-    sortedEvents.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
   } else if (activeFilter === "Tanggal Terlama") {
+    sortedEvents.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+  } else if (activeFilter === "Tanggal Terbaru") {
     sortedEvents.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
   }
 

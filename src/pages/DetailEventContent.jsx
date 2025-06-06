@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { CalendarDays, Clock } from "lucide-react";
+import { CalendarDays } from "lucide-react";
 import Navbar from "../components/navbar";
 import Button from "../components/button";
 
@@ -12,7 +12,7 @@ const EventDetailContent = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    fetch(`https://upnext-be.vercel.app/events/${id}`, {
+    fetch(`${import.meta.env.VITE_API_URL}/events/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -21,7 +21,6 @@ const EventDetailContent = () => {
       .then((data) => {
         if (data?.data?.event) {
           setEventData(data.data.event);
-          console.log("Foto dokumentasi:", data.data.event.photos);
         } else {
           console.error("Data event tidak ditemukan:", data);
           setEventData(null);
@@ -44,19 +43,7 @@ const EventDetailContent = () => {
     };
     const startDate = new Date(start).toLocaleDateString("id-ID", options);
     const endDate = new Date(end).toLocaleDateString("id-ID", options);
-    return `${startDate} - ${endDate}`;
-  };
-
-  const formatTime = (start, end) => {
-    const s = new Date(start).toLocaleTimeString("id-ID", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-    const e = new Date(end).toLocaleTimeString("id-ID", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-    return `${s} - ${e} WIB`;
+    return startDate === endDate ? startDate : `${startDate} - ${endDate}`;
   };
 
   if (loading)
@@ -88,14 +75,12 @@ const EventDetailContent = () => {
             <h1 className="text-2xl md:text-3xl font-bold mb-2">
               {eventData.title}
             </h1>
-            <div className="flex items-center gap-2 text-gray-600 text-sm mb-1">
+
+            <div className="flex items-center gap-2 text-gray-600 text-sm mb-4">
               <CalendarDays className="w-5 h-5" />
               <span>{formatDateRange(eventData.startDate, eventData.endDate)}</span>
             </div>
-            <div className="flex items-center gap-2 text-gray-600 text-sm mb-4">
-              <Clock className="w-5 h-5" />
-              <span>{formatTime(eventData.startDate, eventData.endDate)}</span>
-            </div>
+
             <p className="text-gray-800 text-sm mb-4">{eventData.description}</p>
 
             {/* Dokumen */}

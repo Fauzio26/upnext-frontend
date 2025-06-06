@@ -18,9 +18,11 @@ const Landing = () => {
             <p className="text-lg text-gray-800 mb-5 max-w-md">
               Dapatkan kabar terbaru seputar pengumuman event di kampusmu secara cepat, ringkas, dan terorganisir di satu tempat.
             </p>
-            <button className="bg-blue-900 text-white px-8 py-4 rounded-lg font-bold hover:bg-blue-600 transition duration-300">
-              Mulai Menjelajah
-            </button>
+            <Link to="/event">
+           <button className="bg-blue-900 text-white px-8 py-4 rounded-lg font-bold hover:bg-blue-600 transition duration-300">
+            Mulai Menjelajah
+          </button>
+           </Link>
           </div>
           <div className="flex-1 min-w-[280px] p-5 text-center">
             <img src={Group1} alt="Event Illustration" className="w-full h-auto" />
@@ -112,16 +114,16 @@ const Landing = () => {
           <div>
             <h4 className="font-bold mb-4">Kontak</h4>
             <p>08512345678</p>
-            <p>08512345678</p>
-            <p>08512345678</p>
-            <p>08512345678</p>
+            <p>08512389301</p>
+            <p>08512319230</p>
+            <p>08126381392</p>
           </div>
           <div>
             <h4 className="font-bold mb-4">Sosial Media</h4>
-            <p>@loremipsum</p>
-            <p>@loremipsum</p>
-            <p>@loremipsum</p>
-            <p>@loremipsum</p>
+            <p>@fauzio_26</p>
+            <p>@bimadnndta</p>
+            <p>@erk_zzzzz</p>
+            <p>@mhd.ztr</p>
           </div>
           <div>
             <h4 className="font-bold mb-4">Universitas</h4>

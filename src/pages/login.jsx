@@ -20,7 +20,7 @@ const Login = () => {
     }
 
     try {
-      const res = await fetch(`https://upnextapi.vercel.app/auth/signin`,{
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/signin`,{
         method: "POST",
         headers: {
           "Content-Type": "application/json"

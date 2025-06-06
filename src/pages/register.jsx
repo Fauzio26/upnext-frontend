@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState } from "react";
 import Input from '../components/input';
 import Button from '../components/button';
 import UpNextLogo from '../assets/logo-upnext.svg';
@@ -37,7 +37,7 @@ const Register = () => {
  // sesuaikan nama field jika backend butuh
 
     try {
-      const res = await fetch(`https://upnextapi.vercel.app/auth/signup`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/signup`, {
         method: "POST",
         body: formData
       });
@@ -114,6 +114,7 @@ const Register = () => {
             <FileInput
               title={"File Bukti Organisasi"}
               onChange={(file) => setFileInput(file)}
+              accept={".png, .jpg, .jpeg"}
             />
             <Button
               label={"Daftar"}
