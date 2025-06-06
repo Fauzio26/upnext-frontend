@@ -11,6 +11,7 @@ import Profile from './pages/profile';
 import EditProfile from './pages/editprofile';
 import AboutUs from './pages/aboutkami'
 import NotFound from './pages/notfound'
+import EventDetailContent from './pages/DetailEventContent'
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path='/login' element={<Login/>}/>
         <Route path='/register' element={<Register/>}/>
         <Route path='/event' element={<Event/>}/>
+        <Route path='/events/:id' element={<EventDetailContent />} />
         <Route path='/landing' element={<Event/>}/>
         <Route path='/createacara' element={<CreateAcara/>}/>
          <Route path='/myevents' element={<MyEvents/>}/>

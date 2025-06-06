@@ -25,7 +25,7 @@ const Event = () => {
           return;
         }
 
-        const response = await fetch(`https://upnextapi.vercel.app/events`, {
+        const response = await fetch(`https://upnext-be.vercel.app/events`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -72,23 +72,26 @@ const Event = () => {
   return (
     <div className="flex flex-col">
       <Navbar />
+
+      {/* Header */}
       <div className="bg-[#567CBD] flex flex-col items-center p-6 gap-2">
-        <h1 className="text-white font-bold text-3xl text-center">Pengumuman Event Kampus Terkini</h1>
+        <h1 className="text-white font-bold text-3xl text-center">
+          Pengumuman Event Kampus Terkini
+        </h1>
         <p className="text-white text-lg text-center">
           Temukan semua pengumuman event terbaru yang penting dan menarik untuk kamu ikuti!
         </p>
       </div>
 
+      {/* Search & Filter */}
       <div className="flex flex-col p-6 gap-6">
         <div className="flex gap-2 w-full">
           <div className="w-full">
-            <Search 
-              value={query} 
+            <Search
+              value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  setSearch(query);
-                }
+                if (e.key === 'Enter') setSearch(query);
               }}
             />
           </div>
@@ -108,13 +111,17 @@ const Event = () => {
           ))}
         </div>
 
+        {/* Event List */}
         {loading ? (
-          <div className="text-center w-full py-10 text-lg text-gray-600">Memuat event...</div>
+          <div className="text-center w-full py-10 text-lg text-gray-600">
+            Memuat event...
+          </div>
         ) : sortedEvents.length > 0 ? (
           <div className="w-full grid grid-cols-2 justify-start gap-6 md:grid-cols-3">
             {sortedEvents.map((event) => (
               <CardEvent
                 key={event.id}
+                id={event.id}
                 title={event.title}
                 dates={event.startDate}
                 description={event.description}
@@ -123,7 +130,9 @@ const Event = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center w-full py-10 text-lg text-gray-600">Tidak ada event ditemukan.</div>
+          <div className="text-center w-full py-10 text-lg text-gray-600">
+            Tidak ada event ditemukan.
+          </div>
         )}
       </div>
     </div>
