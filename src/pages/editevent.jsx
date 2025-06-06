@@ -9,7 +9,7 @@ function EditEvent() {
   const navigate = useNavigate();
   const [judul, setJudul] = useState('');
   const [deskripsi, setDeskripsi] = useState('');
-  const [lokasi, setLokasi] = useState('');
+  const [linkRegistrasi, setLinkRegistrasi] = useState('');
   const [tanggal, setTanggal] = useState('');
   const [waktu, setWaktu] = useState('');
   const [banner, setBanner] = useState([]);
@@ -17,40 +17,37 @@ function EditEvent() {
   const [documents, setDocuments] = useState([]);
   const [docNames, setDocNames] = useState([]);
 
-    useEffect(() => {
-  const token = localStorage.getItem('token');
-  fetch(`${import.meta.env.VITE_API_URL}/events/${id}`, {
-    method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${token}`,
-    },
-  })
-    .then(async res => {
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(`Fetch error ${res.status}: ${text}`);
-      }
-      return res.json();
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    fetch(`${import.meta.env.VITE_API_URL}/events/${id}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
     })
-    .then(data => {
-      setJudul(data.title || '');
-      setDeskripsi(data.description || '');
-      setLokasi(data.location || '');
-      setTanggal(data.date || '');
-      setWaktu(data.time || '');
+      .then(async res => {
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(`Fetch error ${res.status}: ${text}`);
+        }
+        return res.json();
+      })
+      .then(data => {
+        setJudul(data.title || '');
+        setDeskripsi(data.description || '');
+        setLinkRegistrasi(data.registrationLink || '');
+        setTanggal(data.date || '');
+        setWaktu(data.time || '');
 
-      // Pastikan gambar banner muncul dengan benar
-      if (data.banner) {
-        const fullUrls = data.banner.map(b => `${import.meta.env.VITE_API_URL}${b.url}`);
-        setBannerPreview(fullUrls); // Update preview gambar
-      }
+        if (data.banner) {
+          const fullUrls = data.banner.map(b => `${import.meta.env.VITE_API_URL}${b.url}`);
+          setBannerPreview(fullUrls);
+        }
 
-      if (data.documents) setDocNames(data.documents);
-    })
-    .catch(err => console.error('Error fetching event:', err));
-}, [id]);
-
-
+        if (data.documents) setDocNames(data.documents);
+      })
+      .catch(err => console.error('Error fetching event:', err));
+  }, [id]);
 
   const handleBannerChange = (e) => {
     const files = Array.from(e.target.files);
@@ -59,7 +56,6 @@ function EditEvent() {
       files.splice(5);
     }
     setBanner(files);
-    // Generate preview URLs untuk gambar
     const previews = files.map(file => URL.createObjectURL(file));
     setBannerPreview(previews);
   };
@@ -75,49 +71,46 @@ function EditEvent() {
     setDocNames(names);
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  const token = localStorage.getItem('token');
-  const formData = new FormData();
-  formData.append('title', judul);
-  formData.append('description', deskripsi);
-  formData.append('location', lokasi);
-  formData.append('date', tanggal); 
-  formData.append('time', waktu);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem('token');
+    const formData = new FormData();
+    formData.append('title', judul);
+    formData.append('description', deskripsi);
+    formData.append('registrationLink', linkRegistrasi);
+    formData.append('date', tanggal);
+    formData.append('time', waktu);
 
-
-  // Upload hanya jika ada file baru
-  banner.forEach(file => {
-    formData.append('banner', file);
-  });
-
-  documents.forEach(file => {
-    formData.append('documents', file);
-  });
-
-  try {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/events/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-      body: formData,
+    banner.forEach(file => {
+      formData.append('banner', file);
     });
 
-    const result = await response.json();
+    documents.forEach(file => {
+      formData.append('documents', file);
+    });
 
-    if (response.ok) {
-      alert('Event berhasil diperbarui');
-      navigate('/myevents');
-    } else {
-      alert(result.message || 'Gagal menyimpan perubahan');
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/events/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert('Event berhasil diperbarui');
+        navigate('/myevents');
+      } else {
+        alert(result.message || 'Gagal menyimpan perubahan');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Terjadi kesalahan saat menyimpan editan');
     }
-  } catch (error) {
-    console.error('Error:', error);
-    alert('Terjadi kesalahan saat menyimpan editan');
-  }
-};
-
+  };
 
   return (
     <>
@@ -143,11 +136,11 @@ const handleSubmit = async (e) => {
             ></textarea>
           </div>
           <Input
-            label="Lokasi"
+            label="Link Registrasi"
             type="text"
-            value={lokasi}
-            onChange={(e) => setLokasi(e.target.value)}
-            placeholder="Masukkan lokasi acara"
+            value={linkRegistrasi}
+            onChange={(e) => setLinkRegistrasi(e.target.value)}
+            placeholder="Masukkan link registrasi acara"
           />
           <Input
             label="Tanggal"
@@ -162,22 +155,27 @@ const handleSubmit = async (e) => {
             onChange={(e) => setWaktu(e.target.value)}
           />
           <div>
-
-            
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Upload Banner (max 5)
             </label>
-           <input
-  type="file"
-  accept="image/*"
-  onChange={handleBannerChange}
-/>
-{bannerPreview && (
-  <img src={bannerPreview} alt="Preview Banner" className="w-24 h-24 object-cover rounded mt-2" />
-)}
-
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleBannerChange}
+            />
+            {bannerPreview.length > 0 && (
+              <div className="flex gap-2 mt-2">
+                {bannerPreview.map((src, index) => (
+                  <img
+                    key={index}
+                    src={src}
+                    alt={`Preview Banner ${index}`}
+                    className="w-24 h-24 object-cover rounded"
+                  />
+                ))}
+              </div>
+            )}
           </div>
-          
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Upload Dokumen (max 5)
@@ -194,7 +192,7 @@ const handleSubmit = async (e) => {
               ))}
             </div>
           </div>
-          <Button type="submit" label="Simpan Editan"/>
+          <Button type="submit" label="Simpan Editan" />
         </form>
       </div>
     </>

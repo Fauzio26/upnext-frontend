@@ -11,14 +11,23 @@ const CreateAcara = () => {
   const [endDate, setEndDate] = useState("");
   const [registLink, setRegistLink] = useState("");
   const [banner, setBanner] = useState(null);
+  const [bannerPreview, setBannerPreview] = useState(null);
   const [documents, setDocuments] = useState([]);
   const [eventPhotos, setEventPhotos] = useState([]);
 
   const navigate = useNavigate();
 
-  const handleFileChange = (e, setter, single = false) => {
+  const handleFileChange = (e, setter, single = false, type = "") => {
     if (!e.target.files) return;
-    setter(single ? e.target.files[0] : Array.from(e.target.files));
+    const files = Array.from(e.target.files);
+    if (single) {
+      setter(files[0]);
+      if (type === "banner") {
+        setBannerPreview(URL.createObjectURL(files[0]));
+      }
+    } else {
+      setter(files);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -70,10 +79,16 @@ const CreateAcara = () => {
         const text = await response.text();
         try {
           const errorData = JSON.parse(text);
-          alert(`Gagal membuat event: ${errorData.message || "Terjadi kesalahan."}`);
+          alert(
+            `Gagal membuat event: ${
+              errorData.message || "Terjadi kesalahan."
+            }`
+          );
         } catch {
           console.error("Unexpected response:", text);
-          alert("Gagal membuat event: Server mengembalikan respon yang tidak terduga.");
+          alert(
+            "Gagal membuat event: Server mengembalikan respon yang tidak terduga."
+          );
         }
       }
     } catch (err) {
@@ -115,7 +130,6 @@ const CreateAcara = () => {
             />
           </div>
 
-          {/* Tanggal Mulai */}
           <Input
             title={"Tanggal Mulai"}
             label={"Tanggal Mulai"}
@@ -124,7 +138,6 @@ const CreateAcara = () => {
             onChange={(e) => setDate(e.target.value)}
           />
 
-          {/* Tanggal Berakhir */}
           <Input
             title={"Tanggal Berakhir"}
             label={"Tanggal Berakhir"}
@@ -133,7 +146,6 @@ const CreateAcara = () => {
             onChange={(e) => setEndDate(e.target.value)}
           />
 
-          {/* Link Pendaftaran */}
           <Input
             title={"Link Pendaftaran"}
             label={"Masukkan link pendaftaran"}
@@ -149,8 +161,17 @@ const CreateAcara = () => {
           <input
             type="file"
             accept="image/*"
-            onChange={(e) => handleFileChange(e, setBanner, true)}
+            onChange={(e) => handleFileChange(e, setBanner, true, "banner")}
           />
+          {bannerPreview && (
+            <div className="mt-2">
+              <img
+                src={bannerPreview}
+                alt="Preview Banner"
+                className="w-48 h-auto rounded shadow-md"
+              />
+            </div>
+          )}
 
           {/* Dokumen */}
           <label className="block text-base font-medium">
