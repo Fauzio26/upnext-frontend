@@ -16,6 +16,8 @@ function EditEvent() {
   const [bannerPreview, setBannerPreview] = useState([]);
   const [documents, setDocuments] = useState([]);
   const [docNames, setDocNames] = useState([]);
+  const [photos, setPhotos] = useState([]);
+  const [photoPreview, setPhotoPreview] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -44,7 +46,12 @@ function EditEvent() {
           setBannerPreview(fullUrls);
         }
 
-        if (data.documents) setDocNames(data.documents);
+        if (data.documents) setDocNames(data.documents.map(doc => doc.originalName || doc.url));
+
+        if (data.eventPhoto) {
+          const photoUrls = data.eventPhoto.map(p => `${import.meta.env.VITE_API_URL}${p.url}`);
+          setPhotoPreview(photoUrls);
+        }
       })
       .catch(err => console.error('Error fetching event:', err));
   }, [id]);
@@ -71,6 +78,17 @@ function EditEvent() {
     setDocNames(names);
   };
 
+  const handlePhotosChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length > 5) {
+      alert('Maksimal 5 foto acara!');
+      files.splice(5);
+    }
+    setPhotos(files);
+    const previews = files.map(file => URL.createObjectURL(file));
+    setPhotoPreview(previews);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
@@ -87,6 +105,10 @@ function EditEvent() {
 
     documents.forEach(file => {
       formData.append('documents', file);
+    });
+
+    photos.forEach(file => {
+      formData.append('photos', file);
     });
 
     try {
@@ -154,17 +176,20 @@ function EditEvent() {
             value={waktu}
             onChange={(e) => setWaktu(e.target.value)}
           />
+
+          {/* Banner */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Upload Banner (max 5)
+              Upload Banner (max 1 Banner)
             </label>
             <input
               type="file"
               accept="image/*"
+              multiple
               onChange={handleBannerChange}
             />
             {bannerPreview.length > 0 && (
-              <div className="flex gap-2 mt-2">
+              <div className="flex gap-2 mt-2 flex-wrap">
                 {bannerPreview.map((src, index) => (
                   <img
                     key={index}
@@ -176,6 +201,8 @@ function EditEvent() {
               </div>
             )}
           </div>
+
+          {/* Dokumen */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Upload Dokumen (max 5)
@@ -192,6 +219,32 @@ function EditEvent() {
               ))}
             </div>
           </div>
+
+          {/* Foto Acara */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Upload Foto Acara (max 5)
+            </label>
+            <input
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={handlePhotosChange}
+            />
+            {photoPreview.length > 0 && (
+              <div className="flex gap-2 mt-2 flex-wrap">
+                {photoPreview.map((src, index) => (
+                  <img
+                    key={index}
+                    src={src}
+                    alt={`Preview Foto ${index}`}
+                    className="w-24 h-24 object-cover rounded"
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
           <Button type="submit" label="Simpan Editan" />
         </form>
       </div>
